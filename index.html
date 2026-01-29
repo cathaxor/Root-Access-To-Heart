@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine Access Portal | CatHaxor</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            script: ['Dancing Script', 'cursive'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          animation: {
+            'blob': 'blob 7s infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'spin-slow': 'spin 8s linear infinite',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { opacity: 1, boxShadow: '0 0 30px rgba(255, 51, 102, 0.6)' },
+              '50%': { opacity: .8, boxShadow: '0 0 60px rgba(255, 51, 102, 0.9)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a0b12; }
+    ::-webkit-scrollbar-thumb { background: #ff3366; border-radius: 5px; }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Custom Checkbox Design */
+    .custom-checkbox:checked + div {
+      background-color: #ff3366;
+      border-color: #ff3366;
+    }
+    .custom-checkbox:checked + div svg {
+      display: block;
+    }
+    
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-[#0f0c29] text-white overflow-x-hidden relative selection:bg-pink-600 selection:text-white">
+
+  <div class="fixed inset-0 z-[-2] bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]"></div>
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-[-1] pointer-events-none">
+    <div class="absolute top-0 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-32 left-1/3 w-72 h-72 md:w-96 md:h-96 bg-rose-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+  </div>
+
+  <canvas id="hearts-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <div id="musicBtn" class="fixed bottom-6 right-6 z-50 group cursor-pointer tap-highlight-transparent">
+    <div class="absolute inset-0 bg-pink-500 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-500"></div>
+    <div class="relative w-14 h-14 md:w-16 md:h-16 bg-black/50 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-transform transform group-hover:scale-110">
+      <span class="text-2xl animate-spin-slow">🎵</span>
+    </div>
+  </div>
+  <audio id="bgMusic" loop src="music.mp3"></audio>
+
+  <section id="hero" class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6 transition-all duration-1000 ease-out">
+    <div class="glass-card p-8 md:p-16 rounded-[2rem] md:rounded-[3rem] text-center max-w-4xl w-full relative overflow-hidden group">
+      <div class="relative inline-block mb-8 md:mb-10">
+        <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full blur opacity-75 animate-pulse"></div>
+        <img src="https://i.ibb.co/NnjKn837/cute-kitten-holding-red-heart-with-daisy-flower-807063-32.jpg" 
+             alt="Cute Kitten" 
+             class="relative w-40 h-40 md:w-64 md:h-64 object-cover rounded-full border-4 border-white/80 shadow-2xl animate-float">
+      </div>
+
+      <div id="consoleBox" class="hidden text-left bg-black/90 p-4 md:p-6 rounded-xl border border-gray-700 font-mono text-xs md:text-lg h-48 md:h-64 overflow-y-auto mb-8 shadow-inner custom-scrollbar"></div>
+
+      <div id="initialContent">
+        <h1 id="mainHeading" class="font-script text-5xl md:text-8xl bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-red-400 to-pink-500 mb-4 drop-shadow-lg leading-tight">
+          Hey, CatHaxor here...
+        </h1>
+        <p class="font-mono text-gray-400 text-xs md:text-base mb-8 bg-black/30 inline-block px-4 py-2 rounded-full border border-white/10">
+          &lt; System Status: Searching for Soulmate... /&gt;
+        </p>
+        <p class="text-lg md:text-2xl text-gray-200 mb-10 font-light leading-relaxed px-2">
+          I can bypass firewalls and crack encrypted codes,<br class="hidden md:block">
+          but I can't seem to hack the distance between us.<br>
+          <span class="font-bold text-pink-400 mt-4 block text-2xl md:text-3xl">Will you be my Valentine? 🌹</span>
+        </p>
+        <div class="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-center relative h-32 md:h-20 w-full">
+          <button id="yesBtn" class="group relative px-10 py-3 md:px-12 md:py-4 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full text-white font-bold text-lg md:text-xl shadow-[0_0_20px_rgba(255,51,102,0.5)] transition-all hover:scale-110 hover:shadow-[0_0_40px_rgba(255,51,102,0.8)] active:scale-95 w-3/4 md:w-auto">
+            <span class="absolute inset-0 w-full h-full bg-white/20 group-hover:scale-x-100 scale-x-0 transition-transform origin-left rounded-full"></span>
+            YES, I WILL! 💖
+          </button>
+          <button id="noBtn" class="px-10 py-3 md:px-12 md:py-4 bg-transparent border-2 border-pink-500/50 text-pink-300 rounded-full font-bold text-lg md:text-xl transition-all hover:bg-pink-500/10 cursor-pointer w-3/4 md:w-auto">
+            NO 💔
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="valentine-content" class="hidden w-full">
+
+    <section class="min-h-screen flex items-center justify-center p-4 md:p-6 py-24">
+      <div class="container max-w-5xl mx-auto">
+        <h2 class="font-script text-5xl md:text-7xl text-center text-pink-300 mb-12 drop-shadow-md">
+          Gift 1 — My Love Letter 💌
+        </h2>
+        <div class="glass-card rounded-2xl p-1 md:p-2 bg-gradient-to-br from-gray-800 to-black border border-gray-600 transform rotate-1 hover:rotate-0 transition duration-500">
+          <div class="bg-gray-900 px-4 py-3 rounded-t-xl flex items-center gap-2 border-b border-gray-700">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span class="ml-4 font-mono text-xs text-gray-400">vim love_letter.txt</span>
+          </div>
+          <div class="p-6 md:p-16 font-mono text-gray-300 leading-relaxed md:leading-loose text-sm md:text-xl text-justify md:text-left">
+            <span class="text-blue-400 font-bold">const</span> <span class="text-yellow-300">myLove</span> = <span class="text-green-400">"Infinity"</span>;<br><br>
+            <p class="mb-6"><span class="text-pink-500 font-bold text-lg md:text-2xl">My Dearest,</span></p>
+            <p class="mb-6">In a world full of temporary variables and runtime errors, you are my only constant. Before I met you, my life felt like a loop with no exit condition—running endlessly but going nowhere. But then you entered my system, and suddenly, everything compiled perfectly.</p>
+            <p class="mb-6">You are the CSS to my HTML; without you, I am just a dull structure. You bring color, layout, and life to my existence. Every time I see your notification, my heart rate overclocks like a CPU under heavy load.</p>
+            <p class="mb-8">No firewall can block the way I feel about you. No algorithm can predict how much I love you—because it is infinite.</p>
+            <p class="text-right mt-10">
+              <span class="text-purple-400">// Always yours,</span><br>
+              <span class="text-xl md:text-3xl font-script text-pink-500">Abdulla (CatHaxor) 👑</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="min-h-screen flex items-center justify-center p-4 md:p-6 py-24 relative">
+      <div class="container max-w-3xl mx-auto text-center">
+        <h2 class="font-script text-5xl md:text-7xl text-pink-300 mb-6">
+          Gift 2 — Our Date Plans 🥂
+        </h2>
+        <p class="font-mono text-gray-400 mb-10 text-sm md:text-xl">&lt; Protocol: Select Mission Parameters /&gt;</p>
+        
+        <div class="glass-card p-6 md:p-10 rounded-3xl text-left space-y-4 md:space-y-6">
+          <label class="flex items-center space-x-4 md:space-x-6 cursor-pointer group p-3 md:p-4 rounded-xl hover:bg-white/5 transition w-full">
+            <input type="checkbox" class="custom-checkbox hidden date-option">
+            <div class="w-8 h-8 md:w-10 md:h-10 border-2 border-pink-400 rounded-lg flex-shrink-0 flex items-center justify-center bg-transparent">
+              <svg class="w-5 h-5 md:w-6 md:h-6 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-lg md:text-2xl font-light">🍕 Late Night Pizza & Movies</span>
+          </label>
+          <label class="flex items-center space-x-4 md:space-x-6 cursor-pointer group p-3 md:p-4 rounded-xl hover:bg-white/5 transition w-full">
+            <input type="checkbox" class="custom-checkbox hidden date-option">
+            <div class="w-8 h-8 md:w-10 md:h-10 border-2 border-pink-400 rounded-lg flex-shrink-0 flex items-center justify-center bg-transparent">
+              <svg class="w-5 h-5 md:w-6 md:h-6 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-lg md:text-2xl font-light">🏍️ Long Bike Ride & Coffee</span>
+          </label>
+          <label class="flex items-center space-x-4 md:space-x-6 cursor-pointer group p-3 md:p-4 rounded-xl hover:bg-white/5 transition w-full">
+            <input type="checkbox" class="custom-checkbox hidden date-option">
+            <div class="w-8 h-8 md:w-10 md:h-10 border-2 border-pink-400 rounded-lg flex-shrink-0 flex items-center justify-center bg-transparent">
+              <svg class="w-5 h-5 md:w-6 md:h-6 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-lg md:text-2xl font-light">🎮 Gaming Together</span>
+          </label>
+          <label class="flex items-center space-x-4 md:space-x-6 cursor-pointer group p-3 md:p-4 rounded-xl hover:bg-white/5 transition w-full">
+            <input type="checkbox" class="custom-checkbox hidden date-option">
+            <div class="w-8 h-8 md:w-10 md:h-10 border-2 border-pink-400 rounded-lg flex-shrink-0 flex items-center justify-center bg-transparent">
+              <svg class="w-5 h-5 md:w-6 md:h-6 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-lg md:text-2xl font-light">🌌 Stargazing & Deep Talks</span>
+          </label>
+          <label class="flex items-center space-x-4 md:space-x-6 cursor-pointer group p-3 md:p-4 rounded-xl hover:bg-white/5 transition w-full">
+            <input type="checkbox" class="custom-checkbox hidden date-option">
+            <div class="w-8 h-8 md:w-10 md:h-10 border-2 border-pink-400 rounded-lg flex-shrink-0 flex items-center justify-center bg-transparent">
+              <svg class="w-5 h-5 md:w-6 md:h-6 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-lg md:text-2xl font-light">📸 Taking Cute/Cringy Photos</span>
+          </label>
+          <label class="flex items-center space-x-4 md:space-x-6 cursor-pointer group p-3 md:p-4 rounded-xl hover:bg-white/5 transition w-full bg-pink-500/10 border border-pink-500/30">
+            <input type="checkbox" class="custom-checkbox hidden date-option" checked>
+            <div class="w-8 h-8 md:w-10 md:h-10 border-2 border-pink-400 rounded-lg flex-shrink-0 flex items-center justify-center bg-pink-500 border-pink-500">
+              <svg class="w-5 h-5 md:w-6 md:h-6 text-white block pointer-events-none" fill="none" stroke="currentColor" viewBox="0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-lg md:text-2xl font-bold text-pink-400">💖 All of the above!</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="min-h-screen flex items-center justify-center p-4 md:p-6 py-24">
+      <div class="container max-w-4xl mx-auto text-center">
+        <h2 class="font-script text-5xl md:text-6xl text-purple-300 mb-8">
+          Why You? 💌
+        </h2>
+        <div class="glass-card p-8 rounded-3xl relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 animate-[shimmer_2s_infinite]"></div>
+          
+          <div id="reasonDisplay" class="min-h-[120px] flex items-center justify-center font-mono text-xl md:text-3xl text-pink-200 p-4 transition-all duration-300">
+            Click the button below to decrypt a reason...
+          </div>
+          
+          <button onclick="generateReason()" class="mt-6 px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-bold text-white shadow-lg transform hover:scale-105 transition active:scale-95">
+            Generate Reason 🎲
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="min-h-screen flex items-center justify-center p-4 md:p-6 py-24">
+      <div class="container max-w-6xl mx-auto text-center">
+        <h2 class="font-script text-5xl md:text-7xl text-pink-300 mb-12">
+          Gift 3 — Rose Bouquet & Promises 🌹
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div class="relative group mx-auto w-full max-w-md md:max-w-full">
+            <div class="absolute -inset-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl blur opacity-40 group-hover:opacity-70 transition duration-1000"></div>
+            <div class="relative bg-white p-3 md:p-4 rounded-2xl transform -rotate-2 group-hover:rotate-0 transition duration-500">
+              <img src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?auto=format&fit=crop&w=1000&q=80" 
+                   alt="Red Roses" 
+                   class="w-full h-auto rounded-lg shadow-lg">
+              <div class="mt-4 font-script text-3xl md:text-4xl text-gray-800">For You, My Love 💋</div>
+            </div>
+          </div>
+          <div class="glass-card p-6 md:p-10 rounded-3xl text-left h-full flex flex-col justify-center w-full">
+            <h3 class="font-mono text-2xl md:text-3xl text-pink-400 mb-6 border-b border-white/10 pb-4">
+              &lt; My_Promises /&gt;
+            </h3>
+            <ul class="space-y-4 md:space-y-6 font-mono text-sm md:text-xl text-gray-300">
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I’ll choose you, <span class="text-white font-bold">loudly</span> and softly.</span></li>
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I’ll be <span class="text-white font-bold">present</span>, not distant.</span></li>
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I’ll protect your <span class="text-white font-bold">peace</span> and your smile.</span></li>
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I’ll keep showing up with <span class="text-white font-bold">effort</span>.</span></li>
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I’ll love you <span class="text-white font-bold">steady</span> and true.</span></li>
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I promise to <span class="text-white font-bold">listen</span>, even when I'm tired.</span></li>
+              <li class="flex items-start gap-3 md:gap-4"><span class="text-green-400 mt-1">➜</span><span>I promise to support your <span class="text-white font-bold">dreams</span> as if they were mine.</span></li>
+            </ul>
+            <div class="mt-8 md:mt-12 text-center">
+               <span class="inline-block px-4 py-2 md:px-6 md:py-2 rounded-full bg-pink-500/20 text-pink-300 font-bold border border-pink-500/50 text-sm md:text-base animate-pulse">
+                 Status: Promised Forever 🔒
+               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-12 pb-24 text-center">
+      <div class="container mx-auto px-4">
+        <h3 class="text-2xl font-mono text-gray-300 mb-6">Ready to make it official?</h3>
+        
+        <button onclick="sendToWhatsapp()" 
+           class="group relative inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold rounded-full text-xl md:text-2xl transition transform hover:scale-110 shadow-[0_0_20px_rgba(37,211,102,0.5)]">
+          
+          <span class="absolute -inset-1 rounded-full bg-[#25D366] opacity-30 group-hover:animate-ping"></span>
+          
+          <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>Let's Make It Official 💑</span>
+        </button>
+        
+        <footer class="mt-20 text-gray-500 font-mono text-xs md:text-sm">
+          Designed & Encoded with 💻 & ❤️ by <span class="text-pink-500">Abdulla (CatHaxor)</span>
+        </footer>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // --- VARIABLES ---
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const initialContent = document.getElementById('initialContent');
+    const consoleBox = document.getElementById('consoleBox');
+    const mainContent = document.getElementById('valentine-content');
+    const musicBtn = document.getElementById('musicBtn');
+    const bgMusic = document.getElementById('bgMusic');
+
+    // --- NO BUTTON EVASION ---
+    noBtn.addEventListener('mouseenter', moveButton);
+    noBtn.addEventListener('touchstart', moveButton);
+
+    function moveButton() {
+      const w = window.innerWidth - noBtn.offsetWidth - 20;
+      const h = window.innerHeight - noBtn.offsetHeight - 20;
+      const x = Math.max(10, Math.random() * w);
+      const y = Math.max(10, Math.random() * h);
+      noBtn.style.position = 'fixed';
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+      noBtn.style.zIndex = '100';
+    }
+
+    // --- TYPING ANIMATION (BALANCED SPEED) ---
+    const typeWriter = async (text, color = 'text-green-400') => {
+      const line = document.createElement('div');
+      line.className = `mb-2 ${color}`;
+      consoleBox.appendChild(line);
+      for (let char of text) {
+        line.innerHTML += char;
+        consoleBox.scrollTop = consoleBox.scrollHeight;
+        await new Promise(r => setTimeout(r, 25)); // Slightly adjusted speed
+      }
+    };
+
+    // --- YES BUTTON CLICK ---
+    yesBtn.addEventListener('click', async () => {
+      bgMusic.volume = 0.5;
+      bgMusic.play().catch(e => console.log("Audio play failed:", e));
+
+      initialContent.style.display = 'none';
+      consoleBox.classList.remove('hidden');
+      
+      // Delays for cinematic effect
+      await typeWriter("> Initializing Heartbeat Protocol...", "text-blue-400");
+      await new Promise(r => setTimeout(r, 400));
+      await typeWriter("> Bypassing insecurities...", "text-yellow-400");
+      await new Promise(r => setTimeout(r, 400));
+      await typeWriter("> Accessing 'Love_Letter.txt'...", "text-green-400");
+      await new Promise(r => setTimeout(r, 800));
+      await typeWriter("> Decrypting Promises...", "text-green-400");
+      await new Promise(r => setTimeout(r, 800));
+      await typeWriter("> ACCESS GRANTED! WELCOME, MY LOVE. ❤️", "text-pink-500 font-bold text-lg md:text-xl");
+      
+      await new Promise(r => setTimeout(r, 800));
+      mainContent.classList.remove('hidden');
+      mainContent.scrollIntoView({ behavior: 'smooth' });
+      initSparkles();
+    });
+
+    // --- MUSIC TOGGLE ---
+    musicBtn.addEventListener('click', () => {
+      if (bgMusic.paused) {
+        bgMusic.play();
+        musicBtn.classList.remove('opacity-50');
+      } else {
+        bgMusic.pause();
+        musicBtn.classList.add('opacity-50');
+      }
+    });
+
+    // --- RANDOM REASON GENERATOR (LARGE LIST) ---
+    const reasons = [
+      "Because you make my dopamine levels skyrocket 📈",
+      "Because your smile cracks my toughest firewalls 🛡️",
+      "Because you are the CSS to my HTML 🎨",
+      "Because life without you is like a 404 error 🚫",
+      "Because you understand my silence ❤️",
+      "Because loving you is the best bug I never want to fix 🐛",
+      "Because you are my favorite notification 🔔",
+      "Because you make reality better than my dreams ✨",
+      "Because you are the root access to my heart 🔐",
+      "Because being with you feels like 100% WiFi signal 📶",
+      "Because you debug my bad days 🛠️",
+      "Because your eyes are deeper than any ocean 🌊",
+      "Because you have the kindest soul I know 💖",
+      "Because even my keyboard types your name automatically ⌨️",
+      "Because you are the only one who gets my nerd jokes 🤓",
+      "Because you make the world feel less chaotic 🌍",
+      "Because I want to build a future with you 🏗️",
+      "Because you are my player 2 forever 🎮",
+      "Because you look cute even when you are angry 😡❤️",
+      "Because my code runs better when you are around 💻",
+      "Because you are the missing piece of my puzzle 🧩",
+      "Because I want to steal all your hoodies 🧥",
+      "Because your laugh is my favorite sound 🎶",
+      "Because you make me want to be a better person 🌟",
+      "Because simple moments with you feel magical ✨",
+      "Because you are my safe space 🏡",
+      "Because I choose you, every single day ♾️"
+    ];
+
+    function generateReason() {
+      const display = document.getElementById('reasonDisplay');
+      const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+      
+      // Small fade animation
+      display.style.opacity = 0;
+      setTimeout(() => {
+        display.innerText = randomReason;
+        display.style.opacity = 1;
+      }, 300);
+    }
+
+    // --- WHATSAPP INTEGRATION (FIXED NUMBER) ---
+    function sendToWhatsapp() {
+      // 1. Phone Number Updated
+      const phoneNumber = "8801784387486"; 
+
+      // 2. Get Selected Date Plans
+      const checkboxes = document.querySelectorAll('.date-option:checked');
+      let selectedPlans = [];
+      
+      checkboxes.forEach((checkbox) => {
+        // Finding the text inside the span next to the div
+        const planText = checkbox.nextElementSibling.nextElementSibling.innerText;
+        selectedPlans.push("✅ " + planText);
+      });
+
+      if (selectedPlans.length === 0) {
+        selectedPlans.push("✅ Surprise me!");
+      }
+
+      // 3. Construct Message
+      const message = `Hey Abdulla! I said YES! 💖\n\nFor our date, I selected:\n${selectedPlans.join('\n')}\n\nSee you soon! 🥰`;
+
+      // 4. Open WhatsApp
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    // --- BACKGROUND HEARTS ---
+    const canvas = document.getElementById('hearts-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor(isSparkle = false) {
+        this.x = Math.random() * width;
+        this.y = isSparkle ? Math.random() * height : height + 20;
+        this.size = Math.random() * 20 + 10;
+        this.speedY = Math.random() * 2 + 0.5;
+        this.color = `rgba(255, 51, 102, ${Math.random() * 0.5 + 0.2})`;
+        this.spin = Math.random() * 0.2 - 0.1;
+        this.angle = 0;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.angle += this.spin;
+        if (this.y < -50) {
+          this.y = height + 50;
+          this.x = Math.random() * width;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.fillStyle = this.color;
+        ctx.font = `${this.size}px Arial`;
+        ctx.fillText('❤️', 0, 0);
+        ctx.restore();
+      }
+    }
+
+    function initParticles() {
+      for(let i=0; i<40; i++) particles.push(new Particle());
+    }
+    function initSparkles() {
+      for(let i=0; i<30; i++) particles.push(new Particle(true));
+    }
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    initParticles();
+    animate();
+  </script>
+</body>
+</html>
